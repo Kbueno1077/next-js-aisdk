@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
 import { AlertCircle, ArrowLeft, Code, Send, Target } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
@@ -18,6 +19,17 @@ function StructuredEnum() {
   const [error, setError] = useState<Error | null>(null);
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const suggestions = [
+    "I love this amazing product!",
+    "This is terrible and disappointing",
+    "The weather is cloudy today",
+  ];
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setText(suggestion);
+    textareaRef.current?.focus();
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -199,21 +211,11 @@ function StructuredEnum() {
                     Enter any text and I&apos;ll analyze its sentiment using
                     structured enums!
                   </p>
-                  <div className="mt-6 space-y-3">
-                    <div className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                      Try these examples
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;I love this amazing product!&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;This is terrible and disappointing&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;The weather is cloudy today&rdquo;
-                      </div>
-                    </div>
+                  <div className="mt-6">
+                    <SuggestionButtons
+                      suggestions={suggestions}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
                   </div>
                 </div>
               </div>

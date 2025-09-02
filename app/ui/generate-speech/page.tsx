@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
 import {
   AlertCircle,
   ArrowLeft,
@@ -25,6 +26,17 @@ function GenerateSpeech() {
   const audioURlRef = useRef<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const suggestions = [
+    "Hello, welcome to our AI assistant!",
+    "The quick brown fox jumps over the lazy dog",
+    "Today is a beautiful day for learning",
+  ];
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setText(suggestion);
+    textareaRef.current?.focus();
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -206,22 +218,11 @@ function GenerateSpeech() {
                     Enter some text and I&apos;ll generate natural-sounding
                     speech for you!
                   </p>
-                  <div className="mt-6 space-y-3">
-                    <div className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                      Try these examples
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Hello, welcome to our AI assistant!&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;The quick brown fox jumps over the lazy
-                        dog&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Today is a beautiful day for learning&rdquo;
-                      </div>
-                    </div>
+                  <div className="mt-6">
+                    <SuggestionButtons
+                      suggestions={suggestions}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
                   </div>
                 </div>
               </div>

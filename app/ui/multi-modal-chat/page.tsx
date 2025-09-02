@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import {
@@ -37,6 +38,17 @@ function MultiModalChat() {
   const [prompt, setPrompt] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const suggestions = [
+    "Describe this image",
+    "What's in this picture?",
+    "Tell me a story about this scene",
+  ];
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setPrompt(suggestion);
+    textareaRef.current?.focus();
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -150,22 +162,11 @@ function MultiModalChat() {
                     Send a message to begin chatting with the AI assistant. You
                     can include text and images!
                   </p>
-                  <div className="mt-6 space-y-3">
-                    <div className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                      Try these examples
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Describe this image&rdquo; (with image)
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;What&apos;s in this picture?&rdquo; (with image)
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Tell me a story about this scene&rdquo; (with
-                        image)
-                      </div>
-                    </div>
+                  <div className="mt-6">
+                    <SuggestionButtons
+                      suggestions={suggestions}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
                   </div>
                 </div>
               </div>

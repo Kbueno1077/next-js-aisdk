@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
 import { ArrowLeft, Code, PenTool, Send, Plus } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,6 +15,17 @@ function Completition() {
   const [isLoading, setIsLoading] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const suggestions = [
+    "Complete this sentence: The future of AI is...",
+    "Write a paragraph about space exploration",
+    "Continue this story: Once upon a time...",
+  ];
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setInputValue(suggestion);
+    textareaRef.current?.focus();
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -130,22 +142,11 @@ function Completition() {
                     Describe your task and I&apos;ll provide assistance with
                     text completion!
                   </p>
-                  <div className="mt-6 space-y-3">
-                    <div className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                      Try these examples
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Complete this sentence: The future of AI
-                        is...&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Write a paragraph about space exploration&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Continue this story: Once upon a time...&rdquo;
-                      </div>
-                    </div>
+                  <div className="mt-6">
+                    <SuggestionButtons
+                      suggestions={suggestions}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
                   </div>
                 </div>
               </div>

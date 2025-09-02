@@ -3,6 +3,7 @@
 import { ChatMessages } from "@/app/api/web-search-tool/route";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import {
@@ -33,6 +34,17 @@ function WebSearchTool() {
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const suggestions = [
+    "What are the latest developments in AI technology?",
+    "Find the best restaurants in San Francisco",
+    "What's happening in the news today?",
+  ];
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setPrompt(suggestion);
+    textareaRef.current?.focus();
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -131,22 +143,11 @@ function WebSearchTool() {
                     Ask questions and get real-time information from the web
                     with AI-powered search!
                   </p>
-                  <div className="mt-6 space-y-3">
-                    <div className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                      Try these examples
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;What are the latest developments in AI
-                        technology?&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Find the best restaurants in San Francisco&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;What&apos;s happening in the news today?&rdquo;
-                      </div>
-                    </div>
+                  <div className="mt-6">
+                    <SuggestionButtons
+                      suggestions={suggestions}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
                   </div>
                 </div>
               </div>

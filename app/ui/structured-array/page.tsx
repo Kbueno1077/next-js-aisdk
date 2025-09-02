@@ -3,6 +3,7 @@
 import { pokemonUISchema } from "@/app/api/structured-array/schema";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import {
   AlertCircle,
@@ -28,6 +29,13 @@ function StructuredData() {
   });
   const pokemonListRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const suggestions = ["Fire", "Water", "Electric"];
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setPokemonType(suggestion);
+    textareaRef.current?.focus();
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -117,21 +125,11 @@ function StructuredData() {
                     Enter a Pokemon type and I&apos;ll generate 5 Pokemon for
                     you with structured arrays!
                   </p>
-                  <div className="mt-6 space-y-3">
-                    <div className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                      Try these examples
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Fire&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Water&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Electric&rdquo;
-                      </div>
-                    </div>
+                  <div className="mt-6">
+                    <SuggestionButtons
+                      suggestions={suggestions}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
                   </div>
                 </div>
               </div>

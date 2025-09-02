@@ -3,6 +3,7 @@
 import { ChatMessages } from "@/app/api/multiple-tools/route";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import {
@@ -33,6 +34,17 @@ function MultipleTools() {
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const suggestions = [
+    "What's the weather like in Paris?",
+    "Where is John located?",
+    "Get the weather for Tokyo and tell me where Jane is",
+  ];
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setPrompt(suggestion);
+    textareaRef.current?.focus();
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -116,22 +128,11 @@ function MultipleTools() {
                     Send a message to begin chatting with the AI assistant. Try
                     asking about weather or locations!
                   </p>
-                  <div className="mt-6 space-y-3">
-                    <div className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                      Try these examples
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;What&apos;s the weather like in Paris?&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Where is John located?&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Get the weather for Tokyo and tell me where Jane
-                        is&rdquo;
-                      </div>
-                    </div>
+                  <div className="mt-6">
+                    <SuggestionButtons
+                      suggestions={suggestions}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
                   </div>
                 </div>
               </div>

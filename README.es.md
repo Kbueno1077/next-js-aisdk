@@ -1,90 +1,58 @@
-# 🚀 AI SDK Playground: Lo que construí mientras aprendía IA
+# Por Qué Comparto Esto
 
-## Por qué comparto esto
+Mientras buscaba recursos para construir aplicaciones con IA rápidamente—principalmente usando el AI SDK de Vercel encontré toneladas de tutoriales en video en YouTube, además de excelente documentación oficial. Eso me hizo pensar: esta es una forma perfecta de introducir a las personas a lo que podría sentirse como un espacio intimidante.
 
-Buscando contenido sobre cómo crear aplicaciones con IA rápidamente, principalmente usando el SDK de Vercel, encontré una nueva serie de este youtuber de código que me gusta mucho, CodeEvolution [tutorial de CodeEvolution sobre AI SDK](https://www.youtube.com/watch?v=iS5tZ9WdO0k) así que me lancé de lleno. Mientras continuaba de un video a otro, en algún momento pensé que esta es una buena manera de introducir a la gente a lo que podría parecer un campo intimidante, que el desarrollo está avanzando.
-La idea era simple: siguiendo la serie construir todas las funcionalidades de IA posibles para ver qué se puede lograr realmente y cuánto tiempo/código tomaría tener demos más simples. ¡Resulta que podemos lograr bastante en poco tiempo y con código mínimo! Esto no está destinado a ser una aplicación de producción o algo serio - es literalmente solo yo jugando con IA y viendo qué funciona, también divirtiéndome con la UI.
+Mi idea era simple: construir tantas funciones pequeñas de IA como fuera posible para ver qué es factible, cuánto tiempo toma, y cuánto código se requiere realmente para demos funcionales. Resulta que puedes lograr _mucho_ con código mínimo y en muy poco tiempo.
 
-### 🔧 Salida Estructurada (Esto es Realmente Útil)
+Esta no es una aplicación de producción ni nada serio—soy yo experimentando con IA, probando ideas y divirtiéndome con la interfaz. El resultado fue un pequeño proyecto demo: [échale un vistazo aquí](https://ai-sdk-demo-playground.vercel.app/).
 
-Esta es probablemente la parte más práctica. En lugar de obtener texto aleatorio de la IA, puedes pedir estructuras de datos específicas. ¿Quieres una receta? Obtén de vuelta un título, lista de ingredientes e instrucciones paso a paso. ¿Necesitas una lista de Pokemon? Obtén un array de objetos con nombres, tipos y estadísticas. Es como tener IA que realmente entiende lo que quieres y te lo devuelve en un formato que puedes usar.
+## 🔧 Salida Estructurada (Sorprendentemente Práctica)
 
-### 🌐 Herramientas Externas (La Magia Real)
+Esta es probablemente la característica más útil. En lugar de solo recibir texto aleatorio de una IA, puedes pedirle que devuelva datos estructurados.
 
-Aquí es donde se pone realmente genial. Conecté una API del clima para que puedas preguntar "¿Cómo está el clima en Tokio?" y la IA realmente obtiene datos en tiempo real. La búsqueda web permite que la IA busque cosas en internet. Múltiples herramientas te permiten combinar diferentes servicios. Es como darle superpoderes a la IA.
+¿Quieres una receta? Obtendrás un título, una lista de ingredientes e instrucciones claras. ¿Necesitas una lista de Pokémon? Obtendrás un array de objetos con nombres, tipos y estadísticas.
 
-## Cómo lo construí
+Es como trabajar con una IA que realmente _entiende_ lo que le estás pidiendo y formatea la respuesta para que puedas usarla de inmediato.
+
+## 🌐 Herramientas Externas (Donde Ocurre la Magia)
+
+Aquí es donde las cosas se vuelven realmente divertidas. Conecté una API del clima para que puedas preguntar "¿Cómo está el clima en Tokio?"—y la IA obtiene datos reales.
+
+Con búsquedas web y otras APIs, puedes combinar servicios para darle nuevas habilidades a tu IA. Es esencialmente como darle superpoderes a tu aplicación.
+
+## Cómo lo Construí
 
 ### El Stack Tecnológico
 
-El stack tecnológico bastante normal de estos días, Next.js 15, TS, Tailwind, shad-cn, y zod (esto es importante para interactuar con la IA y tener respuestas estructuradas) luego AI SDK v5 es el personaje principal aquí - maneja todas las cosas de IA para que no tengas que hacerlo, y Arcjet para seguridad básica (detección de bots, limitación de tasa - para que no me quiebre si ves el demo).
+Bastante estándar hoy en día:
 
-### La Arquitectura
-
-Cada funcionalidad obtiene su propia ruta de API en `app/api/`. No es rocket science - el chat va en una ruta, la generación de imágenes en otra, las herramientas en otra. Los componentes de UI están organizados de la misma manera - cada funcionalidad tiene una página para jugar, dentro de la app puedes ver el código básico que se usó para hacer la herramienta respectiva.
-
-El AI SDK hace la mayor parte del trabajo pesado. ¿Quieres un chat? Hook `useChat()`. ¿Completación de texto? `useCompletion()`. Maneja streaming, gestión de estado, todas esas cosas. Me sorprendió lo poco código que realmente tuve que escribir.
-
-### La Salida Estructurada es un Cambio de Juego
-
-Obtener texto aleatorio de vuelta de la IA está bien para el chat, pero cuando realmente quieres usar los datos? No tanto. Con la salida estructurada, puedes obtener exactamente lo que necesitas:
-
-```typescript
-const { completion } = await streamText({
-  model: openai("gpt-5"),
-  schema: z.object({
-    title: z.string(),
-    ingredients: z.array(z.string()),
-    instructions: z.array(z.string()),
-  }),
-  prompt: "Dame una receta de galletas",
-});
-```
-
-Ahora obtienes de vuelta un objeto apropiado en lugar de una pared de texto. Es como tener IA que realmente entiende los tipos de datos.
-
-### Las Herramientas son Donde se Pone Interesante
-
-Permitir que la IA use servicios externos es bastante salvaje. Puedes construir un asistente de IA que realmente sepa cosas sobre el mundo real:
-
-```typescript
-const { messages } = useChat({
-  api: "/api/tools",
-  tools: {
-    getWeather: {
-      description: "Obtener el clima para una ubicación",
-      parameters: z.object({
-        location: z.string(),
-      }),
-    },
-  },
-
-  execute: async ({ city }) => {
-    /* Call to weather api*/
-  },
-});
-```
-
-Ahora tu IA puede verificar el clima, buscar en la web, llamar APIs - lo que quieras darle acceso.
-
-## La Parte Buena
-
-Es genial para empezar, puedes tener prototipos listos súper rápido y construir sobre ellos, es divertido y aprendes mucho sobre cómo se pueden construir las aplicaciones modernas. Además, como el AI SDK de Vercel ofrece un enfoque estandarizado para interactuar con LLMs, te permite cambiar entre proveedores con facilidad mientras usas la misma API para todos los proveedores.
-
-## La Parte No Tan Buena
-
-Definitivamente puede abstraerte lo suficiente como para que te pierdas cosas sobre cómo funciona el núcleo de la IA, así que dar un paso hacia abajo y saber cómo interactuar con estos LLMs sin un framework que "te lleve de la mano" es súper beneficioso incluso si cuando vas a desarrollar algo terminas usando la mayor parte del tiempo este tipo de frameworks.
-
-## Extra
-
-No lo usé en mi demo pero Vercel también ofrece muchos componentes ya construidos que tienen que ver con este tipo de aplicaciones de chat-bot de IA, [Vercel Ai Elements](https://ai-sdk.dev/elements/overview), vale la pena revisarlo
-
-## Recursos que Usé
-
-- [Documentación de AI SDK](https://sdk.vercel.ai) - Las cosas oficiales
-- [Tutorial de CodeEvolution](https://www.youtube.com/watch?v=iS5tZ9WdO0k) - Lo que me inició
-- [Ejemplos de Vercel AI](https://github.com/vercel/ai/tree/main/examples) - Más ideas para robar
+- **Next.js 15**
+- **TypeScript**
+- **Tailwind CSS**
+- **Shadcn/ui**
+- **Zod** (clave para validar respuestas estructuradas)
+- **Vercel AI SDK v5** (la estrella del show, manejando todo el trabajo de IA)
+- **Arcjet** (para seguridad—detección de bots, limitación de velocidad—para que no me arruine por abuso del demo)
 
 ---
 
-_Así que sí, eso es lo que construí mientras aprendía AI SDK. No es perfecto, pero es divertido de usar. Siéntete libre de explorar, romper cosas y ver qué puedes construir. La IA está bastante loca estos días._
+### La Arquitectura
+
+La configuración es simple. Cada característica tiene su propia ruta API en `app/api/`:
+
+- Chat en una
+- Generación de imágenes en otra
+- Herramientas en otra
+
+La interfaz sigue el mismo patrón: cada característica tiene su propia página de playground, donde también puedes ver el código mínimo que la impulsa.
+
+El AI SDK hace la mayor parte del trabajo pesado. Por ejemplo:
+
+- `useChat()` maneja las interacciones de chat
+- `useCompletion()` cubre la generación de texto
+
+También maneja streaming, estado y más—dejándome sorprendido de cuán poco código se necesitó.
+
+### Por Qué la Salida Estructurada lo Cambia Todo
+
+El texto plano está bien para chat, pero los datos estructurados son mucho más útiles para aplicaciones reales. Por ejemplo:

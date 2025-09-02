@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
 import { useCompletion } from "@ai-sdk/react";
 import { AlertCircle, ArrowLeft, Code, Send, Square, Zap } from "lucide-react";
 import Link from "next/link";
@@ -13,6 +14,17 @@ function Stream() {
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const suggestions = [
+    "Write a short story about a robot",
+    "Explain how photosynthesis works",
+    "Create a recipe for chocolate chip cookies",
+  ];
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setInput(suggestion);
+    textareaRef.current?.focus();
+  };
 
   const {
     completion,
@@ -105,21 +117,11 @@ function Stream() {
                     Describe your task and I&apos;ll provide assistance with
                     real-time streaming responses!
                   </p>
-                  <div className="mt-6 space-y-3">
-                    <div className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                      Try these examples
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Write a short story about a robot&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Explain how photosynthesis works&rdquo;
-                      </div>
-                      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
-                        &ldquo;Create a recipe for chocolate chip cookies&rdquo;
-                      </div>
-                    </div>
+                  <div className="mt-6">
+                    <SuggestionButtons
+                      suggestions={suggestions}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
                   </div>
                 </div>
               </div>
