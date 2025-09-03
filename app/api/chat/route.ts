@@ -9,7 +9,6 @@ export async function POST(req: NextRequest) {
   try {
     const { messages }: { messages: ChatMessages[] } = await req.json();
 
-    // Skip Arcjet protection in development mode
     if (!process.env.IS_DEV_MODE) {
       const decision = await aj.protect(req, {
         requested: 1,
@@ -30,6 +29,14 @@ export async function POST(req: NextRequest) {
     const result = streamText({
       model: openai("gpt-4.1-nano"),
       messages: convertToModelMessages(messages),
+    });
+
+    result.usage.then((usage) => {
+      console.log({
+        inputTokens: usage.inputTokens,
+        outputTokens: usage.outputTokens,
+        totalTokens: usage.totalTokens,
+      });
     });
 
     return result.toUIMessageStreamResponse();

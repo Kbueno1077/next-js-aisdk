@@ -146,7 +146,7 @@ function ApiTool() {
                     } mb-4`}
                   >
                     <div
-                      className={`w-full lg:max-w-md px-4 py-3 rounded-2xl shadow-lg transition-all duration-200 hover:shadow-xl ${
+                      className={`w-full px-4 py-3 rounded-2xl shadow-lg transition-all duration-200 hover:shadow-xl ${
                         message.role === "user"
                           ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white"
                           : "bg-white border border-gray-200 text-gray-800 shadow-sm hover:border-gray-300"

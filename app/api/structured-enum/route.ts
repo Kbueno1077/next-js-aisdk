@@ -7,7 +7,6 @@ export async function POST(req: NextRequest) {
   try {
     const { text } = await req.json();
 
-    // Skip Arcjet protection in development mode
     if (!process.env.IS_DEV_MODE) {
       const decision = await aj.protect(req, {
         requested: 1,
@@ -31,6 +30,14 @@ export async function POST(req: NextRequest) {
       enum: ["positive", "negative", "neutral"],
       prompt: `Classify the sentiment of the following text: ${text}`,
     });
+
+    if (result.usage) {
+      console.log({
+        inputTokens: result.usage.inputTokens,
+        outputTokens: result.usage.outputTokens,
+        totalTokens: result.usage.totalTokens,
+      });
+    }
 
     return NextResponse.json(result.object);
   } catch (error) {

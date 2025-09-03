@@ -1,12 +1,13 @@
 import { aj } from "@/arcject/config";
-import { NextRequest, NextResponse } from "next/server";
-import { recipeSchema } from "./schema";
-import { streamObject } from "ai";
 import { openai } from "@ai-sdk/openai";
+import { convertToModelMessages, streamText, UIMessage, UIDataTypes } from "ai";
+import { NextRequest, NextResponse } from "next/server";
+
+export type ChatMessages = UIMessage<never, UIDataTypes>;
 
 export async function POST(req: NextRequest) {
   try {
-    const { dish } = await req.json();
+    const { messages }: { messages: ChatMessages[] } = await req.json();
 
     if (!process.env.IS_DEV_MODE) {
       const decision = await aj.protect(req, {
@@ -25,11 +26,15 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const result = streamObject({
-      model: openai("gpt-4.1-nano"),
-
-      schema: recipeSchema,
-      prompt: `Generate a recipe for ${dish}`,
+    const result = streamText({
+      model: openai.responses("gpt-5-nano"),
+      messages: convertToModelMessages(messages),
+      providerOptions: {
+        openai: {
+          reasoningEffort: "low",
+          reasoningSummary: "auto",
+        },
+      },
     });
 
     result.usage.then((usage) => {
@@ -40,10 +45,13 @@ export async function POST(req: NextRequest) {
       });
     });
 
-    return result.toTextStreamResponse();
+    return result.toUIMessageStreamResponse();
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to generate structured data response", details: error },
+      {
+        error: error,
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }

@@ -1,4 +1,5 @@
 import {
+  Brain,
   ClipboardList,
   Cloud,
   ImageIcon,
@@ -43,6 +44,15 @@ export const features = [
     icon: MessageCircle,
     gradient: "from-blue-500 to-indigo-600",
     bgGradient: "from-blue-50 to-indigo-50",
+  },
+  {
+    title: "AI Reasoning Chat",
+    description:
+      "Advanced AI chat with reasoning capabilities, showing the AI's thought process in collapsible accordions.",
+    href: "/ui/reasoning-chat",
+    icon: Brain,
+    gradient: "from-indigo-500 to-purple-600",
+    bgGradient: "from-indigo-50 to-purple-50",
   },
   {
     title: "Structured Data",

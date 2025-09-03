@@ -38,7 +38,6 @@ function Stream() {
   } = useCompletion({
     api: "/api/stream",
     onError: (error) => {
-      console.log("🚀 ~ Stream ~ error:", error);
       toast.error("Stream error occurred: " + error.message);
     },
   });

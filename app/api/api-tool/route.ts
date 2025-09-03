@@ -52,7 +52,6 @@ export async function POST(req: NextRequest) {
   try {
     const { messages }: { messages: ChatMessages[] } = await req.json();
 
-    // Skip Arcjet protection in development mode
     if (!process.env.IS_DEV_MODE) {
       const decision = await aj.protect(req, {
         requested: 1,
@@ -75,6 +74,14 @@ export async function POST(req: NextRequest) {
       messages: convertToModelMessages(messages),
       tools,
       stopWhen: stepCountIs(2),
+    });
+
+    result.usage.then((usage) => {
+      console.log({
+        inputTokens: usage.inputTokens,
+        outputTokens: usage.outputTokens,
+        totalTokens: usage.totalTokens,
+      });
     });
 
     return result.toUIMessageStreamResponse();

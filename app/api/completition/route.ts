@@ -7,7 +7,6 @@ export async function POST(req: NextRequest) {
   try {
     const { prompt } = await req.json();
 
-    // Skip Arcjet protection in development mode
     if (!process.env.IS_DEV_MODE) {
       const decision = await aj.protect(req, {
         requested: 1,
@@ -29,6 +28,14 @@ export async function POST(req: NextRequest) {
       model: openai("gpt-4.1-nano"),
       prompt,
     });
+
+    if (response.usage) {
+      console.log({
+        inputTokens: response.usage.inputTokens,
+        outputTokens: response.usage.outputTokens,
+        totalTokens: response.usage.totalTokens,
+      });
+    }
 
     return NextResponse.json(response);
   } catch (error) {
