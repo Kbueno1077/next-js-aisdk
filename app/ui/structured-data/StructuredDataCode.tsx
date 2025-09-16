@@ -21,7 +21,7 @@ function StructuredData() {
     setRecipe(null);
 
     try {
-      const response = await fetch("/api/sctructuredData", {
+      const response = await fetch("/api/structured-data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -155,7 +155,7 @@ export function StructuredDataCode() {
             <div className="min-w-0 overflow-hidden">
               <CodeBlock
                 language="typescript"
-                filename="app/api/sctructuredData/route.ts"
+                filename="app/api/structured-data/route.ts"
                 code={backendCode}
               />
             </div>
@@ -171,7 +171,7 @@ export function StructuredDataCode() {
           <div className="min-w-0 overflow-hidden">
             <CodeBlock
               language="typescript"
-              filename="app/api/sctructuredData/schema.ts"
+              filename="app/api/structured-data/schema.ts"
               code={schemaCode}
             />
           </div>

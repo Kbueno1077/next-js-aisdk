@@ -1,6 +1,6 @@
 "use client";
 
-import { recipeSchema } from "@/app/api/sctructured-data/schema";
+import { recipeSchema } from "@/app/api/structured-data/schema";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
@@ -15,7 +15,7 @@ function StructuredData() {
   const [dishName, setDishName] = useState("");
   const [showCode, setShowCode] = useState(false);
   const { submit, object, isLoading, error, stop } = useObject({
-    api: "/api/sctructured-data",
+    api: "/api/structured-data",
     schema: recipeSchema,
     onError: async (error) => {
       toast.error("Structured data error occurred: " + error.message);
