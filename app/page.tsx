@@ -4,10 +4,13 @@ import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { features } from "@/data/featured-tools";
 import { ChevronRight, ExternalLink, FileText } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useLocalStorage } from "@/lib/use-local-storage";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("text");
+  const [activeTab, setActiveTab] = useLocalStorage(
+    "ai-sdk-playground-active-tab",
+    "text"
+  );
 
   const categories = {
     text: {
@@ -34,7 +37,7 @@ export default function Home() {
   };
 
   const activeFeatures = features.filter(
-    (feature) => feature.category === activeTab,
+    (feature) => feature.category === activeTab
   );
 
   return (
@@ -82,7 +85,7 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-2 mb-8">
             {Object.entries(categories).map(([categoryKey, categoryInfo]) => {
               const categoryFeatures = features.filter(
-                (feature) => feature.category === categoryKey,
+                (feature) => feature.category === categoryKey
               );
               if (categoryFeatures.length === 0) return null;
 
