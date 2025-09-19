@@ -10,16 +10,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { StreamCode } from "./StreamCode";
 
+const suggestions = [
+  "Write a short story about a robot",
+  "Explain how photosynthesis works",
+  "Create a recipe for chocolate chip cookies",
+];
+
 function Stream() {
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const suggestions = [
-    "Write a short story about a robot",
-    "Explain how photosynthesis works",
-    "Create a recipe for chocolate chip cookies",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setInput(suggestion);

@@ -9,18 +9,18 @@ import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { CompletitionCode } from "./CompletitionCode";
 
+const suggestions = [
+  "Complete this sentence: The future of AI is...",
+  "Write a paragraph about space exploration",
+  "Continue this story: Once upon a time...",
+];
+
 function Completition() {
   const [inputValue, setInputValue] = useState("");
   const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const suggestions = [
-    "Complete this sentence: The future of AI is...",
-    "Write a paragraph about space exploration",
-    "Continue this story: Once upon a time...",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setInputValue(suggestion);

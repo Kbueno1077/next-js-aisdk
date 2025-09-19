@@ -1,41 +1,40 @@
 "use client";
 
-import { ChatMessages } from "@/app/api/(tools)/tools/route";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import {
   AlertCircle,
   ArrowLeft,
   Code,
+  MessageCircle,
   Send,
   Square,
-  Wrench,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { ToolsCode } from "./ToolsCode";
-import { ToolRenderer } from "./components";
+import { MetadataCode } from "./MetadataCode";
+import { DefaultChatTransport } from "ai";
+import { UIMessageMetadata } from "@/app/api/(chat)/metadata/types";
 
 const suggestions = [
-  "What's the weather like in New York?",
-  "How's the weather in Tokyo today?",
-  "Tell me about the weather in London",
+  "Tell me a joke",
+  "Explain quantum physics in simple terms",
+  "Help me plan a weekend trip",
 ];
 
-function Tools() {
-  const { messages, sendMessage, status, error, stop } = useChat<ChatMessages>({
-    transport: new DefaultChatTransport({
-      api: "/api/tools",
-    }),
-    onError: async (error) => {
-      toast.error("Tools error occurred: " + error.message);
-    },
-  });
-
+function ChatMetadata() {
+  const { messages, sendMessage, status, error, stop } =
+    useChat<UIMessageMetadata>({
+      transport: new DefaultChatTransport({
+        api: "/api/metadata",
+      }),
+      onError: async (error) => {
+        toast.error("Chat error occurred: " + error.message);
+      },
+    });
   const [prompt, setPrompt] = useState("");
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -93,7 +92,7 @@ function Tools() {
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </Link>
             <h1 className="text-xl font-semibold text-gray-800">
-              AI Tools Assistant
+              AI Assistant + Metadata
             </h1>
           </div>
           <div className="flex items-center gap-3">
@@ -112,21 +111,21 @@ function Tools() {
       {/* Messages Container - Add padding top and bottom to prevent overlap */}
       <div className="flex-1 overflow-y-auto pt-20 pb-40 overscroll-y-contain">
         {showCode ? (
-          <ToolsCode />
+          <MetadataCode />
         ) : (
           <div className="max-w-3xl mx-auto">
             {messages.length === 0 ? (
               <div className="flex items-center justify-center h-full px-4 py-10">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Wrench className="w-8 h-8 text-gray-400" />
+                    <MessageCircle className="w-8 h-8 text-gray-400" />
                   </div>
                   <h2 className="text-2xl font-semibold text-gray-800 mb-2">
                     Start a conversation
                   </h2>
                   <p className="text-gray-500">
-                    Send a message to begin chatting with the AI assistant. Try
-                    asking about weather in different cities!
+                    Send a message to begin chatting with the AI assistant. Ask
+                    questions, get help, or have a conversation!
                   </p>
                   <div className="mt-6">
                     <SuggestionButtons
@@ -163,26 +162,38 @@ function Tools() {
                                 {part.text}
                               </div>
                             );
-
-                          case "tool-getWeather":
-                            return (
-                              <ToolRenderer
-                                key={`${message.id}-${index}`}
-                                part={part}
-                                messageId={message.id}
-                                index={index}
-                              />
-                            );
-
                           default:
                             return null;
                         }
                       })}
+
+                      {message.metadata && (
+                        <div className="text-xs text-gray-400 mt-2 pt-2 border-t border-gray-100 w-full">
+                          <div className="flex items-center justify-between w-full">
+                            {message.metadata.createdAt && (
+                              <span className="flex items-center gap-1">
+                                {new Date(
+                                  message.metadata.createdAt
+                                ).toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                })}
+                              </span>
+                            )}
+                            {message.metadata.totalTokens && (
+                              <span className="flex items-center gap-1">
+                                {message.metadata.totalTokens} tokens
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
 
-                {/* Error Display - Moved higher up for better visibility */}
+                {/* Error Display */}
                 {error && (
                   <div className="bg-red-50 border border-red-200 rounded-lg mx-4 mt-4 p-4 shadow-sm">
                     <div className="flex items-start gap-3">
@@ -280,4 +291,4 @@ function Tools() {
   );
 }
 
-export default Tools;
+export default ChatMetadata;

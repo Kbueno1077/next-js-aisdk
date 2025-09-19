@@ -20,6 +20,12 @@ import { toast } from "sonner";
 import { McpToolsCode } from "./McpToolsCode";
 import { ToolRenderer } from "./components";
 
+const suggestions = [
+  "Get the current stock price for AAPL",
+  "What's the latest news about AI?",
+  "Search for information about climate change",
+];
+
 function McpTools() {
   const { messages, sendMessage, status, error, stop } = useChat<ChatMessages>({
     transport: new DefaultChatTransport({
@@ -34,12 +40,6 @@ function McpTools() {
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const suggestions = [
-    "Get the current stock price for AAPL",
-    "What's the latest news about AI?",
-    "Search for information about climate change",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setPrompt(suggestion);

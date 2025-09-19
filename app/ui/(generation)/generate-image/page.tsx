@@ -17,6 +17,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { GenerateImageCode } from "./GenerateImageCode";
 
+const suggestions = [
+  "A futuristic city with flying cars",
+  "A serene mountain landscape at sunset",
+  "A cute robot playing with a cat",
+];
+
 function GenerateImagePage() {
   const [prompt, setPrompt] = useState("");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -24,12 +30,6 @@ function GenerateImagePage() {
   const [error, setError] = useState<string | null>(null);
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const suggestions = [
-    "A futuristic city with flying cars",
-    "A serene mountain landscape at sunset",
-    "A cute robot playing with a cat",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setPrompt(suggestion);

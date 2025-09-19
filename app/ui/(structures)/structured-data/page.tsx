@@ -11,6 +11,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { StructuredDataCode } from "./StructuredDataCode";
 
+const suggestions = [
+  "Chocolate chip cookies",
+  "Spaghetti carbonara",
+  "Chicken curry",
+];
+
 function StructuredData() {
   const [dishName, setDishName] = useState("");
   const [showCode, setShowCode] = useState(false);
@@ -23,12 +29,6 @@ function StructuredData() {
   });
   const recipeRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const suggestions = [
-    "Chocolate chip cookies",
-    "Spaghetti carbonara",
-    "Chicken curry",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setDishName(suggestion);

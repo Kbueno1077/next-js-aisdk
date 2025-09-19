@@ -5,8 +5,8 @@ import {
   AlertCircle,
   ArrowLeft,
   Code,
-  File,
   Mic,
+  Paperclip,
   Pause,
   Play,
   RotateCcw,
@@ -219,6 +219,45 @@ function TranscribeAudioPage() {
     }
   };
 
+  const loadSampleAudio = async () => {
+    try {
+      const encodedPath = encodeURI("/assets/harvard.wav");
+      const res = await fetch(encodedPath);
+      if (!res.ok) throw new Error("Failed to load sample audio");
+      const blob = await res.blob();
+      const file = new File([blob], "harvard.wav", { type: "audio/wav" });
+
+      // Clean up previous audio URL
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl);
+      }
+
+      if (fileInputRef.current) {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInputRef.current.files = dt.files;
+      }
+
+      // Mirror handleFileChange to ensure UI is updated without relying on Event
+      // Clean up previous audio URL
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl);
+      }
+      setAudioFile(file);
+      setTranscription(null);
+      setError(null);
+      const newAudioUrl = URL.createObjectURL(file);
+      setAudioUrl(newAudioUrl);
+      setIsPlaying(false);
+      setCurrentTime(0);
+      setDuration(0);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Could not load sample audio";
+      toast.error("Transcription error occurred: " + message);
+    }
+  };
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -386,7 +425,7 @@ function TranscribeAudioPage() {
                         <div className="mb-4 p-3 bg-gray-50 rounded-lg">
                           <div className="flex items-center space-x-3 mb-2">
                             <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                              <File className="w-4 h-4 text-blue-600" />
+                              <Paperclip className="w-4 h-4 text-blue-600" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-gray-900 truncate">
@@ -467,7 +506,7 @@ function TranscribeAudioPage() {
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <File className="w-4 h-4 text-blue-600" />
+                        <Paperclip className="w-4 h-4 text-blue-600" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 truncate">
@@ -554,6 +593,16 @@ function TranscribeAudioPage() {
                   >
                     <Upload className="w-5 h-5" />
                   </label>
+
+                  <Button
+                    type="button"
+                    onClick={loadSampleAudio}
+                    variant="secondary"
+                    className="h-8 px-3 text-xs"
+                    disabled={isLoading}
+                  >
+                    Load sample audio
+                  </Button>
 
                   <input
                     ref={fileInputRef}

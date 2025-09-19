@@ -81,6 +81,16 @@ export const features = [
     category: "chat",
   },
   {
+    title: "AI Providers Chat",
+    description:
+      "Select OpenAI models (Fast, Smart, Reasoning) on the fly with a minimal segmented control.",
+    href: "/ui/providers",
+    icon: Settings,
+    gradient: "from-sky-500 to-blue-600",
+    bgGradient: "from-sky-50 to-blue-50",
+    category: "chat",
+  },
+  {
     title: "Multi-Modal Chat",
     description:
       "Advanced AI chat with support for text, images, and multiple input types for rich conversations.",
@@ -88,6 +98,16 @@ export const features = [
     icon: ImageIcon,
     gradient: "from-rose-500 to-pink-600",
     bgGradient: "from-rose-50 to-pink-50",
+    category: "chat",
+  },
+  {
+    title: "Metadata Chat",
+    description:
+      "AI chat that includes message metadata like timestamps and token usage.",
+    href: "/ui/metadata",
+    icon: ClipboardList,
+    gradient: "from-sky-500 to-cyan-600",
+    bgGradient: "from-sky-50 to-cyan-50",
     category: "chat",
   },
 

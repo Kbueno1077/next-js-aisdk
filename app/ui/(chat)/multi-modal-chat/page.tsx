@@ -9,8 +9,8 @@ import {
   AlertCircle,
   ArrowLeft,
   Code,
-  File,
   ImageIcon,
+  Paperclip,
   Send,
   Square,
 } from "lucide-react";
@@ -19,6 +19,12 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { MultiModalChatCode } from "./MultiModalChatCode";
+
+const suggestions = [
+  "Describe this image",
+  "What's in this picture?",
+  "Tell me a story about this scene",
+];
 
 function MultiModalChat() {
   const [files, setFiles] = useState<FileList | undefined>(undefined);
@@ -38,12 +44,6 @@ function MultiModalChat() {
   const [prompt, setPrompt] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const suggestions = [
-    "Describe this image",
-    "What's in this picture?",
-    "Tell me a story about this scene",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setPrompt(suggestion);
@@ -95,6 +95,28 @@ function MultiModalChat() {
     setFiles(dt.files.length > 0 ? dt.files : undefined);
     if (fileInputRef.current) {
       fileInputRef.current.files = dt.files.length > 0 ? dt.files : null;
+    }
+  };
+
+  const loadSampleImage = async () => {
+    try {
+      const encodedPath = encodeURI("/assets/image playing.jpg");
+      const res = await fetch(encodedPath);
+      if (!res.ok) throw new Error("Failed to load sample image");
+      const blob = await res.blob();
+      const file = new File([blob], "image playing.jpg", {
+        type: blob.type || "image/jpeg",
+      });
+
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      setFiles(dt.files);
+      if (fileInputRef.current) {
+        fileInputRef.current.files = dt.files;
+      }
+      toast.success("Sample image selected");
+    } catch {
+      toast.error("Could not load sample image");
     }
   };
 
@@ -227,7 +249,24 @@ function MultiModalChat() {
                               );
                             }
 
-                            return null;
+                            return (
+                              <div
+                                key={`${message.id}-${index}-file`}
+                                className="flex items-center gap-2 text-sm text-gray-600"
+                              >
+                                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
+                                  <Paperclip className="w-4 h-4 text-gray-500" />
+                                </div>
+                                <span className="truncate max-w-xs">
+                                  {part.filename || `attachment-${index}`}
+                                </span>
+                                {part.mediaType && (
+                                  <span className="text-xs text-gray-400">
+                                    ({part.mediaType})
+                                  </span>
+                                )}
+                              </div>
+                            );
                           default:
                             return null;
                         }
@@ -346,13 +385,22 @@ function MultiModalChat() {
             )}
 
             <form onSubmit={handleSubmit} className="relative">
-              <div className="flex items-end gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-200">
+              <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-200">
                 <label
                   htmlFor="file-input"
                   className="cursor-pointer p-2 text-gray-500 hover:text-gray-700 transition-colors"
                 >
-                  <File className="w-5 h-5" />
+                  <Paperclip className="w-5 h-5" />
                 </label>
+
+                <Button
+                  type="button"
+                  onClick={loadSampleImage}
+                  variant="secondary"
+                  className="h-8 px-3 text-xs"
+                >
+                  Load sample image
+                </Button>
 
                 <input
                   type="file"

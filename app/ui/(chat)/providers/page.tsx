@@ -1,43 +1,49 @@
 "use client";
 
-import { ChatMessages } from "@/app/api/(tools)/tools/route";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { SuggestionButtons } from "@/components/ui/suggestion-buttons";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import {
   AlertCircle,
   ArrowLeft,
+  Brain,
   Code,
+  MessageCircle,
   Send,
   Square,
-  Wrench,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { ToolsCode } from "./ToolsCode";
-import { ToolRenderer } from "./components";
+import { ProvidersCode } from "./ProvidersCode";
+import { DefaultChatTransport } from "ai";
 
 const suggestions = [
-  "What's the weather like in New York?",
-  "How's the weather in Tokyo today?",
-  "Tell me about the weather in London",
+  "Tell me a joke",
+  "Explain quantum physics in simple terms",
+  "Help me plan a weekend trip",
 ];
+type ChatInnerProps = {
+  api: string;
+  onChangeApi: (api: string) => void;
+  showCode: boolean;
+};
 
-function Tools() {
-  const { messages, sendMessage, status, error, stop } = useChat<ChatMessages>({
-    transport: new DefaultChatTransport({
-      api: "/api/tools",
-    }),
+function ChatInner({ api, onChangeApi, showCode }: ChatInnerProps) {
+  const { messages, sendMessage, status, error, stop } = useChat({
+    transport: new DefaultChatTransport({ api }),
     onError: async (error) => {
-      toast.error("Tools error occurred: " + error.message);
+      toast.error("Chat error occurred: " + error.message);
     },
   });
-
   const [prompt, setPrompt] = useState("");
-  const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -81,52 +87,25 @@ function Tools() {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-dvh bg-gray-50 relative overflow-hidden">
-      {/* Header - Fixed at top with mobile safe area */}
-      <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 px-4 py-3 z-20 safe-area-inset-top">
-        <div className="max-w-3xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
-            </Link>
-            <h1 className="text-xl font-semibold text-gray-800">
-              AI Tools Assistant
-            </h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={() => setShowCode(!showCode)}
-              variant="ghost"
-              className="flex items-center gap-2"
-            >
-              <Code className="w-4 h-4" />
-              {showCode ? "Hide Code" : "View Code"}
-            </Button>
-          </div>
-        </div>
-      </div>
-
+    <>
       {/* Messages Container - Add padding top and bottom to prevent overlap */}
       <div className="flex-1 overflow-y-auto pt-20 pb-40 overscroll-y-contain">
         {showCode ? (
-          <ToolsCode />
+          <ProvidersCode />
         ) : (
           <div className="max-w-3xl mx-auto">
             {messages.length === 0 ? (
               <div className="flex items-center justify-center h-full px-4 py-10">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Wrench className="w-8 h-8 text-gray-400" />
+                    <MessageCircle className="w-8 h-8 text-gray-400" />
                   </div>
                   <h2 className="text-2xl font-semibold text-gray-800 mb-2">
                     Start a conversation
                   </h2>
                   <p className="text-gray-500">
-                    Send a message to begin chatting with the AI assistant. Try
-                    asking about weather in different cities!
+                    Send a message to begin chatting with the AI assistant. Ask
+                    questions, get help, or have a conversation!
                   </p>
                   <div className="mt-6">
                     <SuggestionButtons
@@ -154,6 +133,32 @@ function Tools() {
                     >
                       {message.parts.map((part, index) => {
                         switch (part.type) {
+                          case "reasoning":
+                            return (
+                              <Accordion
+                                key={`${message.id}-${index}`}
+                                type="single"
+                                collapsible
+                                className="w-full"
+                              >
+                                <AccordionItem
+                                  value="reasoning"
+                                  className="border-none "
+                                >
+                                  <AccordionTrigger className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:no-underline py-2">
+                                    <div className="flex items-center gap-2">
+                                      <Brain className="w-4 h-4 text-blue-500" />
+                                      Reasoning
+                                    </div>
+                                  </AccordionTrigger>
+                                  <AccordionContent className="pt-2">
+                                    <div className="whitespace-pre-wrap leading-relaxed text-gray-600 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                                      {part.text}
+                                    </div>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              </Accordion>
+                            );
                           case "text":
                             return (
                               <div
@@ -163,17 +168,6 @@ function Tools() {
                                 {part.text}
                               </div>
                             );
-
-                          case "tool-getWeather":
-                            return (
-                              <ToolRenderer
-                                key={`${message.id}-${index}`}
-                                part={part}
-                                messageId={message.id}
-                                index={index}
-                              />
-                            );
-
                           default:
                             return null;
                         }
@@ -182,7 +176,7 @@ function Tools() {
                   </div>
                 ))}
 
-                {/* Error Display - Moved higher up for better visibility */}
+                {/* Error Display */}
                 {error && (
                   <div className="bg-red-50 border border-red-200 rounded-lg mx-4 mt-4 p-4 shadow-sm">
                     <div className="flex items-start gap-3">
@@ -233,6 +227,78 @@ function Tools() {
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4 z-10 safe-area-inset-bottom">
           <div className="max-w-3xl mx-auto">
             <form onSubmit={handleSubmit} className="relative">
+              <div className="mb-2 flex items-center gap-2">
+                <div
+                  className="inline-flex items-center overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm divide-x divide-gray-200"
+                  role="tablist"
+                  aria-label="Provider / Model"
+                >
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    aria-pressed={api === "/api/providers/openai/fast"}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-none transition-colors ${
+                      api === "/api/providers/openai/fast"
+                        ? "bg-gray-100 text-gray-900"
+                        : "text-gray-600 hover:bg-gray-50"
+                    }`}
+                    onClick={() => onChangeApi("/api/providers/openai/fast")}
+                  >
+                    <span className="inline-flex items-center gap-1.5">
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="w-3.5 h-3.5"
+                        fill="currentColor"
+                        aria-hidden
+                      >
+                        <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path>
+                      </svg>
+                      Fast
+                    </span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    aria-pressed={api === "/api/providers/openai/smart"}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-none transition-colors ${
+                      api === "/api/providers/openai/smart"
+                        ? "bg-gray-100 text-gray-900"
+                        : "text-gray-600 hover:bg-gray-50"
+                    }`}
+                    onClick={() => onChangeApi("/api/providers/openai/smart")}
+                  >
+                    <span className="inline-flex items-center gap-1.5">
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="w-3.5 h-3.5"
+                        fill="currentColor"
+                        aria-hidden
+                      >
+                        <path d="M12 2l2.39 4.84L20 8l-4 3.9L17 18l-5-2.6L7 18l1-6.1L4 8l5.61-1.16L12 2z"></path>
+                      </svg>
+                      Smart
+                    </span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    aria-pressed={api === "/api/providers/openai/reasoning"}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-none transition-colors ${
+                      api === "/api/providers/openai/reasoning"
+                        ? "bg-gray-100 text-gray-900"
+                        : "text-gray-600 hover:bg-gray-50"
+                    }`}
+                    onClick={() =>
+                      onChangeApi("/api/providers/openai/reasoning")
+                    }
+                  >
+                    <span className="inline-flex items-center gap-1.5">
+                      <Brain className="w-3.5 h-3.5" />
+                      Reasoning
+                    </span>
+                  </Button>
+                </div>
+              </div>
               <div className="flex items-end gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-200">
                 <Textarea
                   ref={textareaRef}
@@ -276,8 +342,46 @@ function Tools() {
           </div>
         </div>
       )}
+    </>
+  );
+}
+
+function Chat() {
+  const [api, setApi] = useState<string>("/api/providers/openai/fast");
+  const [showCode, setShowCode] = useState(false);
+
+  return (
+    <div className="flex flex-col h-dvh bg-gray-50 relative overflow-hidden">
+      {/* Header - Fixed at top with mobile safe area */}
+      <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 px-4 py-3 z-20 safe-area-inset-top">
+        <div className="max-w-3xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-gray-600" />
+            </Link>
+            <h1 className="text-xl font-semibold text-gray-800">
+              AI Providers Chat
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={() => setShowCode(!showCode)}
+              variant="ghost"
+              className="flex items-center gap-2"
+            >
+              <Code className="w-4 h-4" />
+              {showCode ? "Hide Code" : "View Code"}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <ChatInner key={api} api={api} onChangeApi={setApi} showCode={showCode} />
     </div>
   );
 }
 
-export default Tools;
+export default Chat;

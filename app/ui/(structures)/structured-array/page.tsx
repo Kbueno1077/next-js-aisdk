@@ -17,6 +17,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { StructuredArrayCode } from "./StructuredArrayCode";
 
+const suggestions = ["Fire", "Water", "Electric"];
+
 function StructuredData() {
   const [pokemonType, setPokemonType] = useState("");
   const [showCode, setShowCode] = useState(false);
@@ -29,8 +31,6 @@ function StructuredData() {
   });
   const pokemonListRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const suggestions = ["Fire", "Water", "Electric"];
 
   const handleSuggestionClick = (suggestion: string) => {
     setPokemonType(suggestion);

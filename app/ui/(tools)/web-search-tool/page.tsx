@@ -20,6 +20,12 @@ import { toast } from "sonner";
 import { ToolsCode } from "./ToolsCode";
 import { ToolRenderer, WebSearchToolPart } from "./components";
 
+const suggestions = [
+  "What are the latest developments in AI technology?",
+  "Find the best restaurants in San Francisco",
+  "What's happening in the news today?",
+];
+
 function WebSearchTool() {
   const { messages, sendMessage, status, error, stop } = useChat<ChatMessages>({
     transport: new DefaultChatTransport({
@@ -34,12 +40,6 @@ function WebSearchTool() {
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const suggestions = [
-    "What are the latest developments in AI technology?",
-    "Find the best restaurants in San Francisco",
-    "What's happening in the news today?",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setPrompt(suggestion);

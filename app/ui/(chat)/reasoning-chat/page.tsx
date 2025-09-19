@@ -25,6 +25,12 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ChatCode } from "./ChatCode";
 
+const suggestions = [
+  "Tell me a joke",
+  "Explain quantum physics in simple terms",
+  "Help me plan a weekend trip",
+];
+
 function ReasoningChat() {
   const { messages, sendMessage, status, error, stop } = useChat({
     transport: new DefaultChatTransport({
@@ -39,12 +45,6 @@ function ReasoningChat() {
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const suggestions = [
-    "Tell me a joke",
-    "Explain quantum physics in simple terms",
-    "Help me plan a weekend trip",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setPrompt(suggestion);

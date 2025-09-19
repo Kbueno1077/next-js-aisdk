@@ -20,6 +20,12 @@ import { toast } from "sonner";
 import { ToolsCode } from "./ToolsCode";
 import { ToolRenderer } from "./components";
 
+const suggestions = [
+  "What's the weather like in Paris?",
+  "Where is John located?",
+  "Get the weather for Tokyo and tell me where Jane is",
+];
+
 function MultipleTools() {
   const { messages, sendMessage, status, error, stop } = useChat<ChatMessages>({
     transport: new DefaultChatTransport({
@@ -34,12 +40,6 @@ function MultipleTools() {
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const suggestions = [
-    "What's the weather like in Paris?",
-    "Where is John located?",
-    "Get the weather for Tokyo and tell me where Jane is",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setPrompt(suggestion);

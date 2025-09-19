@@ -20,6 +20,12 @@ import { toast } from "sonner";
 import { ToolsCode } from "./ToolsCode";
 import { ToolRenderer } from "./components";
 
+const suggestions = [
+  "What's the weather like in New York?",
+  "How's the weather in Tokyo today?",
+  "Tell me about the weather in London",
+];
+
 function ApiTool() {
   const { messages, sendMessage, status, error, stop } = useChat<ChatMessages>({
     transport: new DefaultChatTransport({
@@ -34,12 +40,6 @@ function ApiTool() {
   const [showCode, setShowCode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const suggestions = [
-    "What's the weather like in New York?",
-    "How's the weather in Tokyo today?",
-    "Tell me about the weather in London",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setPrompt(suggestion);

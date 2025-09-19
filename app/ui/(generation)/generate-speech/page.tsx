@@ -17,6 +17,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { GenerateSpeechCode } from "./GenerateSpeechCode";
 
+const suggestions = [
+  "Hello, welcome to our AI assistant!",
+  "The quick brown fox jumps over the lazy dog",
+  "Today is a beautiful day for learning",
+];
+
 function GenerateSpeech() {
   const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,12 +32,6 @@ function GenerateSpeech() {
   const audioURlRef = useRef<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const suggestions = [
-    "Hello, welcome to our AI assistant!",
-    "The quick brown fox jumps over the lazy dog",
-    "Today is a beautiful day for learning",
-  ];
 
   const handleSuggestionClick = (suggestion: string) => {
     setText(suggestion);
