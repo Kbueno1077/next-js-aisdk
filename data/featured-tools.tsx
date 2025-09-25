@@ -142,6 +142,16 @@ export const features = [
     bgGradient: "from-teal-50 to-cyan-50",
     category: "structured",
   },
+  {
+    title: "Semantic Search",
+    description:
+      "Find semantically similar items using embeddings and cosine similarity.",
+    href: "/ui/semantic-search",
+    icon: Search,
+    gradient: "from-emerald-500 to-teal-600",
+    bgGradient: "from-emerald-50 to-teal-50",
+    category: "structured",
+  },
 
   // AI Tools & Integrations
   {
@@ -183,6 +193,7 @@ export const features = [
     bgGradient: "from-green-50 to-emerald-50",
     category: "tools",
   },
+
   {
     title: "Gen Image Tool",
     description:
