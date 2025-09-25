@@ -143,7 +143,7 @@ export function SemanticSearchCode() {
           <ul className="space-y-2 text-purple-700">
             <li className="flex items-start gap-2">
               <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-              <span>Embeddings with OpenAI's text-embedding-3-small</span>
+              <span>Embeddings with OpenAI&apos;s text-embedding-3-small</span>
             </li>
             <li className="flex items-start gap-2">
               <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
