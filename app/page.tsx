@@ -26,6 +26,10 @@ export default function Home() {
       title: "Structured Data Generation",
       description: "Generate organized data structures and classifications",
     },
+    rag: {
+      title: "RAG",
+      description: "Retrieval-Augmented Generation over your documents",
+    },
     tools: {
       title: "AI Tools & Integrations",
       description: "AI-powered tools with external API integrations",

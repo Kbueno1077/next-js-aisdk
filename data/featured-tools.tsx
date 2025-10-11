@@ -214,6 +214,17 @@ export const features = [
     bgGradient: "from-emerald-50 to-teal-50",
     category: "tools",
   },
+  // RAG
+  {
+    title: "RAG Chatbot",
+    description:
+      "Retrieval-Augmented Generation: chat over your documents with citations.",
+    href: "/ui/rag",
+    icon: Search,
+    gradient: "from-fuchsia-500 to-violet-600",
+    bgGradient: "from-fuchsia-50 to-violet-50",
+    category: "rag",
+  },
   {
     title: "MCP Tools",
     description:
