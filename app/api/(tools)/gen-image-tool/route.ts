@@ -16,9 +16,11 @@ import { z } from "zod";
 const tools = {
   generateImage: tool({
     description: "Generate an image from a prompt",
+    // @ts-expect-error - zod object
     inputSchema: z.object({
       prompt: z.string().describe("The prompt to generate an image for"),
     }),
+    // @ts-expect-error - zod object
     execute: async ({ prompt }) => {
       const { image } = await generateImage({
         model: openai.imageModel("dall-e-3"),

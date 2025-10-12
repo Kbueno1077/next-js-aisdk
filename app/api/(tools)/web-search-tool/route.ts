@@ -11,7 +11,7 @@ import {
 import { NextRequest, NextResponse } from "next/server";
 
 const tools = {
-  web_search_preview: openai.tools.webSearchPreview({}),
+  web_search_preview: openai.tools.webSearch({}),
 
   //FOR ANTHROPIC
   // web_search: anthropic.tools.webSearch_20250305({

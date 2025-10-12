@@ -11,8 +11,8 @@ const isAdminRoute = createRouteMatcher(["/upload(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   // NOT WORKING
-  const sessionClaims = await auth();
-  const isAdmin = sessionClaims?.sessionClaims?.metadata?.role === "admin";
+  // const sessionClaims = await auth();
+  // const isAdmin = sessionClaims?.sessionClaims?.metadata?.role === "admin";
 
   if (isAdminRoute(req) && !process.env.IS_DEV_MODE) {
     const url = new URL("/", req.url);
