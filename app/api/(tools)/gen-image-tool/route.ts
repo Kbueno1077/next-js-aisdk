@@ -16,11 +16,9 @@ import { z } from "zod";
 const tools = {
   generateImage: tool({
     description: "Generate an image from a prompt",
-    // @ts-expect-error - tool() might expect a generic for the schema, ensure Zod compatibility
     inputSchema: z.object({
       prompt: z.string().describe("The prompt to generate an image for"),
     }),
-    // @ts-expect-error - tool() might expect a generic for the schema, ensure Zod compatibility
     execute: async ({ prompt }) => {
       const { image } = await generateImage({
         model: openai.imageModel("dall-e-3"),

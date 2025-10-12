@@ -19,7 +19,6 @@ const tools = {
   // }),
 };
 
-// @ts-expect-error - tool() might expect a generic for the schema, ensure Zod compatibility
 export type ChatTools = InferUITools<typeof tools>;
 export type ChatMessages = UIMessage<never, UIDataTypes, ChatTools>;
 
@@ -48,7 +47,6 @@ export async function POST(req: NextRequest) {
       model: openai.responses("gpt-4.1-mini"),
       // model: anthropic("claude-sonnet-20250305"),
       messages: convertToModelMessages(messages),
-      // @ts-expect-error - tool() might expect a generic for the schema, ensure Zod compatibility
       tools,
       stopWhen: stepCountIs(1),
     });
